@@ -69,7 +69,7 @@ public class TaskManager {
         return epicId;
     }
 
-    Integer addNewSubtask(Subtask subtask) {
+    int addNewSubtask(Subtask subtask) {
         int epicId = subtask.getParentId();
         Epic epic = epics.get(epicId);
         int subtaskId = generateUid(subtask);
@@ -90,7 +90,9 @@ public class TaskManager {
     }
 
     void updateEpic(Epic epic) {
-        epic.updateEpic();
+        epic.updateEpic(this);
+        epics.put(epic.getId(), epic);// не совсем ясно зачем, т.к. объект меняется в самой мапе
+        // (если я не правильно понял, отпишись пожалуйста)
     }
 
     void updateSubtask(Subtask subtask) {
@@ -107,11 +109,19 @@ public class TaskManager {
     }
 
     void deleteEpic(int id) {
+        List<Subtask> epicSubtasks = getEpicSubtasks(id);
+        for (Subtask subtask : epicSubtasks) {
+            subtasks.remove(subtask.getId());
+        }
         epics.remove(id);
     }
 
     void deleteSubtask(int id) {
-        subtasks.remove(id);
+        Subtask subtask = getSubtask(id);
+        if (subtask != null) {
+            subtasks.remove(id);
+            updateEpic(getEpic(subtask.getParentId()));
+        }
     }
 
     void deleteTasks() {
@@ -120,10 +130,14 @@ public class TaskManager {
 
     void deleteSubtasks() {
         subtasks.clear();
+        for (Epic epic : epics.values()) {
+            updateEpic(epic);
+        }
     }
 
     void deleteEpics() {
         epics.clear();
+        subtasks.clear();
     }
 
     public Map<Integer, Task> getTasksMap() {
@@ -137,5 +151,4 @@ public class TaskManager {
     public Map<Integer, Subtask> getSubtasksMap() {
         return subtasks;
     }
-
 }

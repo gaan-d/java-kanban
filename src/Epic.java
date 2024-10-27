@@ -2,16 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
-    private final ArrayList<Subtask> subtasks;
-    private List<Integer> subtaskIds = new ArrayList<>();
+    private List<Integer> subtaskIds = new ArrayList<>(); // Хранение только ID подзадач
 
     public Epic(String name, String description) {
         super(name, description, Status.NEW);
-        this.subtasks = new ArrayList<>();
-    }
-
-    public ArrayList<Subtask> getSubtasks() {
-        return subtasks;
     }
 
     public List<Integer> getSubtaskIds() {
@@ -25,23 +19,30 @@ public class Epic extends Task {
     public void removeSubtaskId(int subtaskId) {
         subtaskIds.remove((Integer) subtaskId);
     }
-    private void updateStatus() {
-        if (subtasks.isEmpty()) {
+
+    // Метод обновления статуса эпика на основе статусов подзадач
+    private void updateStatus(TaskManager manager) {
+        if (subtaskIds.isEmpty()) {
             setStatus(Status.NEW);
         } else {
-            boolean done = true;
-            boolean inProgress = false;
-            for (Subtask subtask : subtasks) {
-                if (subtask.getStatus() != Status.DONE) {
-                    done = false;
-                }
-                if (subtask.getStatus() == Status.IN_PROGRESS) {
-                    inProgress = true;
+            boolean allDone = true;
+            boolean hasInProgress = false;
+
+            for (int subtaskId : subtaskIds) {
+                Subtask subtask = manager.getSubtask(subtaskId);
+                if (subtask != null) {
+                    if (subtask.getStatus() != Status.DONE) {
+                        allDone = false;
+                    }
+                    if (subtask.getStatus() == Status.IN_PROGRESS) {
+                        hasInProgress = true;
+                    }
                 }
             }
-            if (done) {
+
+            if (allDone) {
                 setStatus(Status.DONE);
-            } else if (inProgress) {
+            } else if (hasInProgress) {
                 setStatus(Status.IN_PROGRESS);
             } else {
                 setStatus(Status.NEW);
@@ -49,18 +50,8 @@ public class Epic extends Task {
         }
     }
 
-    public void updateEpic() {
-        updateStatus();
-    }
-
-    public void removeSubtask(Subtask subtask) {
-        subtasks.remove(subtask);
-        updateStatus();
-    }
-
-    public void clearSubtasks() {
-        subtasks.clear();
-        updateStatus();
+    public void updateEpic(TaskManager manager) {
+        updateStatus(manager);
     }
 
     @Override
@@ -70,7 +61,7 @@ public class Epic extends Task {
                 ", description='" + getDescription() + '\'' +
                 ", id=" + getId() +
                 ", status=" + getStatus() +
-                ", subtasks=" + getSubtasks() +
+                ", subtaskIds=" + getSubtaskIds() +
                 '}';
     }
 }

@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Task {
     private String name;
     private String description;
@@ -7,13 +9,6 @@ public class Task {
     public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
-        this.status = status;
-    }
-
-    public Task(String name, String description, Status status, int id) {
-        this.name = name;
-        this.description = description;
-        this.id = id;
         this.status = status;
     }
 
@@ -55,6 +50,11 @@ public class Task {
         if (object == null || getClass() != object.getClass()) return false;
         Task task = (Task) object;
         return id == task.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public int hashCode(int taskIdCounter) {
