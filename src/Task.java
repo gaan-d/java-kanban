@@ -1,5 +1,3 @@
-import java.util.Objects;
-
 public class Task {
     private String name;
     private String description;
@@ -59,8 +57,7 @@ public class Task {
         return id == task.id;
     }
 
-    @Override
-    public int hashCode() {
+    public int hashCode(int taskIdCounter) {
         return (Integer.hashCode(id));
     }
 

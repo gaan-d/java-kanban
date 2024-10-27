@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -21,7 +23,7 @@ public class Main {
         final Integer subtaskId2 = manager.addNewSubtask(subtask2);
         final Integer subtaskId3 = manager.addNewSubtask(subtask3);
 
-        //printAllTasks(manager);
+        printAllTasks(manager);
 
         // Обновление
         final Task task = manager.getTask(taskId2);
@@ -49,7 +51,7 @@ public class Main {
         System.out.println("Эпики:");
         for (Task e : manager.getEpics()) {
             System.out.println(e);
-            for (Task t : manager.getEpicSubtasks(e.getId())) {
+            for (Subtask t : manager.getEpicSubtasks(e.getId())) {
                 System.out.println("--> " + t);
             }
         }
@@ -72,7 +74,32 @@ public class Main {
         manager.deleteTask(taskId1);
         System.out.println("DELETE: Epic1");
         manager.deleteEpic(epicId1);
-        //printAllTasks(manager);
+        printAllTasks(manager);
 
+
+    }
+
+    private static void printAllTasks(TaskManager manager) {
+        System.out.println("Список всех задач:");
+
+        System.out.println("\nОбычные задачи:");
+        manager.getTasksMap().values().forEach(System.out::println);
+
+        System.out.println("\nЭпики:");
+        for (Task epic : manager.getEpics()) {  // Здесь предполагается, что метод getEpics() возвращает список эпиков
+            System.out.println(epic);  // Вывод информации об эпике
+
+            List<Subtask> subtasks = manager.getEpicSubtasks(epic.getId());  // Получаем сабтаски для эпика
+            if (!subtasks.isEmpty()) {
+                for (Subtask subtask : subtasks) {
+                    System.out.println("--> " + subtask);  // Выводим информацию о сабтасках
+                }
+            } else {
+                System.out.println("--> У данного эпика нет подзадач.");
+            }
+
+            System.out.println("\nПодзадачи:");
+            manager.getSubtasksMap().values().forEach(System.out::println);
+        }
     }
 }

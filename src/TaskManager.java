@@ -9,16 +9,10 @@ public class TaskManager {
     private Map<Integer, Epic> epics = new HashMap<>();
     private int taskIdCounter = 0;
 
-    public int generateTaskId() {
-        return ++taskIdCounter;
-    }
-
-    public int generateSubtaskId() {
-        return ++taskIdCounter;
-    }
-
-    public int generateEpicId() {
-        return ++taskIdCounter;
+    public int generateUid(Task task) {
+        int hashId = 31 * Integer.hashCode(taskIdCounter);
+        taskIdCounter++;
+        return hashId;
     }
 
     List<Task> getTasks() {
@@ -62,23 +56,28 @@ public class TaskManager {
     }
 
     int addNewTask(Task task) {
-        int taskId = generateTaskId();
+        int taskId = generateUid(task);
         task.setId(taskId);
         tasks.put(taskId, task);
         return taskId;
     }
 
     int addNewEpic(Epic epic) {
-        int epicId = generateEpicId();
+        int epicId = generateUid(epic);
         epic.setId(epicId);
         epics.put(epicId, epic);
         return epicId;
     }
 
     Integer addNewSubtask(Subtask subtask) {
-        int subtaskId = generateSubtaskId();
+        int epicId = subtask.getParentId();
+        Epic epic = epics.get(epicId);
+        int subtaskId = generateUid(subtask);
         subtask.setId(subtaskId);
         subtasks.put(subtaskId, subtask);
+
+        epic.addSubtaskId(subtaskId);
+        updateEpic(getEpic(epicId));
         return subtaskId;
     }
 
@@ -95,11 +94,10 @@ public class TaskManager {
     }
 
     void updateSubtask(Subtask subtask) {
-        if (subtask != null && subtasks.containsKey(subtask.getId())){
-            subtasks.put(subtask.getId(),subtask);
+        if (subtask != null && subtasks.containsKey(subtask.getId())) {
+            subtasks.put(subtask.getId(), subtask);
             updateEpic(getEpic(subtask.getParentId()));
-        }
-        else {
+        } else {
             System.out.println("Подзадача с ID " + subtask.getId() + " не найдена.");
         }
     }
@@ -127,4 +125,17 @@ public class TaskManager {
     void deleteEpics() {
         epics.clear();
     }
+
+    public Map<Integer, Task> getTasksMap() {
+        return tasks;
+    }
+
+    public Map<Integer, Epic> getEpicsMap() {
+        return epics;
+    }
+
+    public Map<Integer, Subtask> getSubtasksMap() {
+        return subtasks;
+    }
+
 }
