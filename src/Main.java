@@ -1,9 +1,16 @@
+import manager.Managers;
+import manager.TaskManager;
+import task.Epic;
+import task.Status;
+import task.Subtask;
+import task.Task;
+
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
 
-        TaskManager manager = new TaskManager();
+        TaskManager manager = Managers.getDefault();
 
         // Создание
         Task task1 = new Task("Task #1", "Task1 description", Status.NEW);
@@ -75,6 +82,12 @@ public class Main {
         System.out.println("DELETE: Epic1");
         manager.deleteEpic(epicId1);
         printAllTasks(manager);
+
+        List <Task> history = manager.getHistory();
+        System.out.println("История просмотренных задач: ");
+        for (Task taskInHistory : history) {
+            System.out.println(taskInHistory);
+        }
 
 
     }

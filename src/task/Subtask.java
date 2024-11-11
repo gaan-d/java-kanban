@@ -1,9 +1,15 @@
+package task;
 public class Subtask extends Task {
 
     private final int parentId;
 
     public Subtask(String name, String description, Status status, int parentId) {
         super(name, description, status);
+        this.parentId = parentId;
+    }
+
+    public Subtask(int id, String name, String description, Status status, int parentId) {
+        super(id, name, description, status);
         this.parentId = parentId;
     }
 
