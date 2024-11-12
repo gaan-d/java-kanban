@@ -78,9 +78,9 @@ public class InMemoryTaskManagerTest {
     // Обновите эпик, затем вернуть эпик с тем же id
     @Test
     public void updateEpicShouldReturnEpicWithTheSameId() {
-        final Epic expected = new Epic(1, "имя", "описание", Status.IN_PROGRESS);
+        final Epic expected = new Epic("имя", "описание");
         taskManager.addNewEpic(expected);
-        final Epic updatedEpic = new Epic(1, "новое имя", "новое описание", Status.IN_PROGRESS);
+        final Epic updatedEpic = new Epic("новое имя", "новое описание");
         final Epic actual = taskManager.updateEpic(updatedEpic);
         assertEquals(expected, actual, "Вернулся эпик с другим id");
     }
@@ -118,7 +118,7 @@ public class InMemoryTaskManagerTest {
 
     //удаление эпик По Id
     @Test
-    public void deleteEpicByIdShouldReturnNullfkeyIsMissing() {
+    public void deleteEpicByIdShouldReturnNullIfKeyIsMissing() {
         taskManager.addNewEpic(new Epic(1, "Задача3", "Подзадача3", Status.IN_PROGRESS));
         taskManager.getEpic(1);
         assertNull(taskManager.deleteTask(1));

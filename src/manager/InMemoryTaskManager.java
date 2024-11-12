@@ -100,8 +100,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addNewEpic(Epic epic) {
-        //int epicId = generateUid(epic);
-        int epicId = epic.getId() == 0 ? generateUid(epic) : epic.getId();
+        int epicId = generateUid(epic);
         epic.setId(epicId);
         epics.put(epicId, epic);
         return epicId;
