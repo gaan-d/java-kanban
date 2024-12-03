@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ManagersTest {
 
     @Test
-    void getDefaultShouldInitializeInMemoryTaskManager(){
+    void getDefaultShouldInitializeInMemoryTaskManager() {
         Assertions.assertInstanceOf(InMemoryTaskManager.class, Managers.getDefault());
     }
 

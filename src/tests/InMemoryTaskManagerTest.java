@@ -40,8 +40,8 @@ public class InMemoryTaskManagerTest {
         final Epic testEpic = taskManager.getEpic(taskManager.addNewEpic(new Epic("Список покупок",
                 "Завтра идем в магазин")));
 
-        final Subtask subtask = taskManager.getSubtask( taskManager.addNewSubtask(new Subtask("Купить молока",
-                "Для кофе",Status.NEW, testEpic.getId())));
+        final Subtask subtask = taskManager.getSubtask(taskManager.addNewSubtask(new Subtask("Купить молока",
+                "Для кофе", Status.NEW, testEpic.getId())));
         final Subtask subtask2 = taskManager.getSubtask(taskManager.addNewSubtask(new Subtask("Купить чая",
                 "Подобрать праздничную одежду", Status.NEW, testEpic.getId())));
 
@@ -59,18 +59,18 @@ public class InMemoryTaskManagerTest {
         assertNotNull(epics, "Epics don't come back");
         assertEquals(1, epics.size(), "The wrong number of epics");
 
-        final List<Subtask> subtasks =  taskManager.getSubtasks();
+        final List<Subtask> subtasks = taskManager.getSubtasks();
         assertNotNull(subtasks, "Subtasks are not returned");
         assertEquals(1, epics.size(), "Incorrect number of subtasks");
 
     }
 
-     //Обновить задачу, затем вернуть задачу с тем же id
+    //Обновить задачу, затем вернуть задачу с тем же id
     @Test
     public void updateTaskShouldReturnTaskWithTheSameId() {
         final Task expected = new Task("имя", "описание", Status.NEW);
         taskManager.addNewTask(expected);
-        final Task updatedTask = new Task(expected.getId(), "новое имя", "новое описание" , Status.DONE);
+        final Task updatedTask = new Task(expected.getId(), "новое имя", "новое описание", Status.DONE);
         final Task actual = taskManager.updateTask(updatedTask);
         assertEquals(expected, actual, "Вернулась задача с другим id");
     }
@@ -90,7 +90,7 @@ public class InMemoryTaskManagerTest {
     public void updateSubtaskShouldReturnSubtaskWithTheSameId() {
         final Epic epic = new Epic("имя", "описание");
         taskManager.addNewEpic(epic);
-        final Subtask expected = new Subtask("имя", "описание",Status.NEW, epic.getId());
+        final Subtask expected = new Subtask("имя", "описание", Status.NEW, epic.getId());
         taskManager.addNewSubtask(expected);
         final Subtask updatedSubtask = new Subtask
                 (expected.getId(), "новое имя", "новое описание", Status.DONE, epic.getId());
@@ -101,7 +101,7 @@ public class InMemoryTaskManagerTest {
     //Удалить эпик и вернуть пустой список
     @Test
     public void deleteEpicsShouldReturnEmptyList() {
-        taskManager.addNewEpic(new Epic(1, "Задача3","Подзадача3", Status.IN_PROGRESS));
+        taskManager.addNewEpic(new Epic(1, "Задача3", "Подзадача3", Status.IN_PROGRESS));
         taskManager.deleteEpics();
         List<Epic> epics = taskManager.getEpics();
         assertTrue(epics.isEmpty(), "Список Эпиков должен быть пуст");
@@ -122,6 +122,7 @@ public class InMemoryTaskManagerTest {
         taskManager.getEpic(1);
         assertNull(taskManager.deleteTask(1));
     }
+
     @Test
     public void removeSubtaskShouldNotKeepOldId() {
         final Epic testEpic = taskManager.getEpic(taskManager.addNewEpic(new Epic("Список покупок", "Завтра идем в магазин")));
@@ -134,6 +135,7 @@ public class InMemoryTaskManagerTest {
         List<Task> history = taskManager.getHistory();
         assertFalse(history.contains(testSubtask), "История не должна содержать удаленную подзадачу");
     }
+
     @Test
     public void epicShouldNotContainRemovedSubtaskIds() {
         final Epic testEpic = taskManager.getEpic(taskManager.addNewEpic(new Epic("Список покупок", "Завтра идем в магазин")));
@@ -146,6 +148,7 @@ public class InMemoryTaskManagerTest {
         Epic updatedEpic = taskManager.getEpic(testEpic.getId());
         assertFalse(updatedEpic.getSubtaskIds().contains(testSubtask.getId()), "Эпик не должен содержать id удаленной подзадачи");
     }
+
     @Test
     public void updateTaskWithSettersShouldUpdateManagerData() {
         final Task task = new Task("Тестовая задача", "Описание", Status.NEW);

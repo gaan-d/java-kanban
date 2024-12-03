@@ -72,6 +72,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return subtask;
     }
+
     @Override
     public Subtask getSubtaskWithoutHistory(int id) {
         return subtasks.get(id);
