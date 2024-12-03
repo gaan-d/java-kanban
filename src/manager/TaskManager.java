@@ -3,6 +3,7 @@ package manager;
 import task.Epic;
 import task.Subtask;
 import task.Task;
+
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,7 @@ public interface TaskManager {
     Map<Integer, Epic> getEpicsMap();
 
     Map<Integer, Subtask> getSubtasksMap();
+
     List<Task> getHistory();
 
     Subtask getSubtaskWithoutHistory(int subtaskId);
