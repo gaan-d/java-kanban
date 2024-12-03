@@ -75,7 +75,7 @@ public class InMemoryTaskManagerTest {
         assertEquals(expected, actual, "Вернулась задача с другим id");
     }
 
-    // Обновите эпик, затем вернуть эпик с тем же id
+    // Обновить эпик, затем вернуть эпик с тем же id
     @Test
     public void updateEpicShouldReturnEpicWithTheSameId() {
         final Epic expected = new Epic("имя", "описание");
@@ -107,7 +107,6 @@ public class InMemoryTaskManagerTest {
         assertTrue(epics.isEmpty(), "Список Эпиков должен быть пуст");
     }
 
-
     //удаление Задачи По id
     @Test
     public void deleteTaskByIdShouldReturnNullIfKeyIsMissing() {
@@ -122,5 +121,46 @@ public class InMemoryTaskManagerTest {
         taskManager.addNewEpic(new Epic(1, "Задача3", "Подзадача3", Status.IN_PROGRESS));
         taskManager.getEpic(1);
         assertNull(taskManager.deleteTask(1));
+    }
+    @Test
+    public void removeSubtaskShouldNotKeepOldId() {
+        final Epic testEpic = taskManager.getEpic(taskManager.addNewEpic(new Epic("Список покупок", "Завтра идем в магазин")));
+        final Subtask testSubtask = taskManager.getSubtask(taskManager.addNewSubtask(new Subtask("Купить молока", "Для кофе", Status.NEW, testEpic.getId())));
+
+        // Удаляем подзадачу
+        taskManager.deleteSubtask(testSubtask.getId());
+
+        // Проверяем, что старый id не остался в истории
+        List<Task> history = taskManager.getHistory();
+        assertFalse(history.contains(testSubtask), "История не должна содержать удаленную подзадачу");
+    }
+    @Test
+    public void epicShouldNotContainRemovedSubtaskIds() {
+        final Epic testEpic = taskManager.getEpic(taskManager.addNewEpic(new Epic("Список покупок", "Завтра идем в магазин")));
+        final Subtask testSubtask = taskManager.getSubtask(taskManager.addNewSubtask(new Subtask("Купить молока", "Для кофе", Status.NEW, testEpic.getId())));
+
+        // Удаляем подзадачу
+        taskManager.deleteSubtask(testSubtask.getId());
+
+        // Проверяем, что эпик больше не содержит удаленную подзадачу
+        Epic updatedEpic = taskManager.getEpic(testEpic.getId());
+        assertFalse(updatedEpic.getSubtaskIds().contains(testSubtask.getId()), "Эпик не должен содержать id удаленной подзадачи");
+    }
+    @Test
+    public void updateTaskWithSettersShouldUpdateManagerData() {
+        final Task task = new Task("Тестовая задача", "Описание", Status.NEW);
+        taskManager.addNewTask(task);
+
+        // Обновляем задачу через сеттеры
+        task.setName("Обновленное имя");
+        task.setDescription("Обновленное описание");
+        task.setStatus(Status.DONE);
+        taskManager.updateTask(task);
+
+        // Проверяем, что изменения корректно отразились в менеджере
+        Task updatedTask = taskManager.getTask(task.getId());
+        assertEquals("Обновленное имя", updatedTask.getName(), "Имя задачи не обновилось");
+        assertEquals("Обновленное описание", updatedTask.getDescription(), "Описание задачи не обновилось");
+        assertEquals(Status.DONE, updatedTask.getStatus(), "Статус задачи не обновился");
     }
 }
