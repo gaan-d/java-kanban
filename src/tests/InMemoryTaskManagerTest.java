@@ -92,8 +92,8 @@ public class InMemoryTaskManagerTest {
         taskManager.addNewEpic(epic);
         final Subtask expected = new Subtask("имя", "описание", Status.NEW, epic.getId());
         taskManager.addNewSubtask(expected);
-        final Subtask updatedSubtask = new Subtask
-                (expected.getId(), "новое имя", "новое описание", Status.DONE, epic.getId());
+        final Subtask updatedSubtask = new Subtask(expected.getId(), "новое имя", "новое описание",
+                Status.DONE, epic.getId());
         final Subtask actual = taskManager.updateSubtask(updatedSubtask);
         assertEquals(expected, actual, "Вернулась подзадача с другим id");
     }
