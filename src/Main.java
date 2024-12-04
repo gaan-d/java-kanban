@@ -83,7 +83,7 @@ public class Main {
         manager.deleteEpic(epicId1);
         printAllTasks(manager);
 
-        List <Task> history = manager.getHistory();
+        List<Task> history = manager.getHistory();
         System.out.println("История просмотренных задач: ");
         for (Task taskInHistory : history) {
             System.out.println(taskInHistory);

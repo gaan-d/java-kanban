@@ -4,7 +4,10 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasks = new HashMap<>();
@@ -72,6 +75,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return subtask;
     }
+
     @Override
     public Subtask getSubtaskWithoutHistory(int id) {
         return subtasks.get(id);
@@ -161,9 +165,12 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteSubtask(int id) {
         Subtask subtask = getSubtask(id);
+        Epic epic = epics.get(subtask.getParentId());
         if (subtask != null) {
+            historyManager.remove(id);
             subtasks.remove(id);
-            updateEpic(getEpic(subtask.getParentId()));
+            epic.removeSubtaskId(id);
+            updateEpic(epic);
         }
     }
 
