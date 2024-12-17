@@ -150,7 +150,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task deleteTask(int id) {
-        return  tasks.remove(id);
+        return tasks.remove(id);
     }
 
     @Override
