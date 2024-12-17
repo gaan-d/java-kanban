@@ -108,7 +108,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             task = new Task(Integer.parseInt(taskFields[0]), taskFields[2], taskFields[4], status);
         } else if (tasktype == TaskType.SUBTASK) {
             task = new Subtask(Integer.parseInt(taskFields[0]), taskFields[2], taskFields[4], status, Integer.parseInt(taskFields[5]));
-        } else if (tasktype == TaskType.EPIC){
+        } else if (tasktype == TaskType.EPIC) {
             task = new Epic(Integer.parseInt(taskFields[0]), taskFields[2], taskFields[4], status);
         }
         return task;
