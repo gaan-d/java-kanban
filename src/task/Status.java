@@ -6,6 +6,7 @@ public enum Status {
     DONE("Выполнено");
 
     private final String name;
+
     private Status(String name) {
         this.name = name;
     }

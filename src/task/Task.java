@@ -20,6 +20,7 @@ public class Task {
         this.description = description;
         this.status = status;
     }
+
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
