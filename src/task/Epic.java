@@ -53,6 +53,8 @@ public class Epic extends Task {
                 setStatus(Status.DONE);
             } else if (hasInProgress) {
                 setStatus(Status.IN_PROGRESS);
+            } else if (!allDone && !hasInProgress) {
+                setStatus(Status.IN_PROGRESS);
             } else {
                 setStatus(Status.NEW);
             }
@@ -87,5 +89,8 @@ public class Epic extends Task {
         return Objects.hash(getId());
     }
 
-
+    @Override
+    public TaskType getType() {
+        return TaskType.EPIC;
+    }
 }
