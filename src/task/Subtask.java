@@ -14,6 +14,11 @@ public class Subtask extends Task {
         this.parentId = parentId;
     }
 
+    public Subtask(String name, String description, int epicId) {
+        super(name, description);
+        this.parentId = epicId;
+    }
+
     public int getParentId() {
         return parentId;
     }
@@ -26,5 +31,10 @@ public class Subtask extends Task {
                 ", id=" + getId() +
                 ", status=" + getStatus() +
                 '}';
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.SUBTASK;
     }
 }
