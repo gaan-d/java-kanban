@@ -44,6 +44,7 @@ class FileBackedTaskManagerTest {
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.get(0), "Задачи не совпадают.");
+        assertTrue(file.length()>0);
     }
 
     @Test
