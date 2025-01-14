@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static manager.FileBackedTaskManager.loadFromFile;
@@ -61,7 +59,7 @@ public class FileBackedTaskManagerTest extends AbstractTaskManagerTest<FileBacke
         final int taskId = taskManager.addNewTask(task);
         final int epicId = taskManager.addNewEpic(epic);
         final Subtask subtask = new Subtask("Подзадача - 1",
-                        "Описание подзадачи - 1 эпической задачи - 1", epicId);
+                "Описание подзадачи - 1 эпической задачи - 1", epicId);
         final int subtaskId = taskManager.addNewSubtask(subtask);
 
         final FileBackedTaskManager backedTaskManager2 = loadFromFile(file);
@@ -94,7 +92,7 @@ public class FileBackedTaskManagerTest extends AbstractTaskManagerTest<FileBacke
         assertEquals(subtask.getParentId(), subtaskLoad.getParentId(), "ID эпиков у подзадач не совпадают");
         assertEquals(subtask.getDuration(), subtaskLoad.getDuration(), "Duration подзадач не совпадают");
         assertEquals(subtask.getStartTime(), subtaskLoad.getStartTime(), "StartTime подзадач не совпадают");
-        }
+    }
 
 
     @Test

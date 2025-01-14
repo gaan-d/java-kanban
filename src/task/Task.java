@@ -17,13 +17,15 @@ public class Task implements Comparable {
         this.description = description;
         this.status = status;
     }
-    public Task( String name, String description, LocalDateTime startTime, Duration duration) {
+
+    public Task(String name, String description, LocalDateTime startTime, Duration duration) {
         this.name = name;
         this.description = description;
         this.duration = duration;
         this.startTime = startTime;
     }
-    public Task( String name, String description,Status status, LocalDateTime startTime, Duration duration) {
+
+    public Task(String name, String description, Status status, LocalDateTime startTime, Duration duration) {
         this.name = name;
         this.description = description;
         this.duration = duration;
@@ -125,19 +127,20 @@ public class Task implements Comparable {
 
     @Override
     public String toString() {
-            return "Task{" +
-                    "name= '" + getName() + '\'' +
-                    ", description= '" + getDescription() + '\'' +
-                    ", id= " + getId() +
-                    ", status= " + getStatus() +
-                    ", startTime= " + (getStartTime() != null ? getStartTime() : "not set") +
-                    ", duration= " + (getDuration() != null ? getDuration().toHours() + " hours " +
-                    getDuration().toMinutesPart() + " minutes" : "not set") +
-                    ", endTime= " + getEndTime() +
-                    '}';
+        return "Task{" +
+                "name= '" + getName() + '\'' +
+                ", description= '" + getDescription() + '\'' +
+                ", id= " + getId() +
+                ", status= " + getStatus() +
+                ", startTime= " + (getStartTime() != null ? getStartTime() : "not set") +
+                ", duration= " + (getDuration() != null ? getDuration().toHours() + " hours " +
+                getDuration().toMinutesPart() + " minutes" : "not set") +
+                ", endTime= " + getEndTime() +
+                '}';
     }
+
     @Override
-    public int compareTo(Object o){
+    public int compareTo(Object o) {
         Task task = (Task) o;
         return startTime.compareTo(task.startTime);
     }

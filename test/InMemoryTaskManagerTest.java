@@ -1,6 +1,5 @@
 import manager.InMemoryTaskManager;
 import manager.Managers;
-import manager.TaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import task.Epic;
@@ -15,7 +14,7 @@ public class InMemoryTaskManagerTest extends AbstractTaskManagerTest {
     public void setUp() {
         taskManager = new InMemoryTaskManager(Managers.getDefaultHistory());
         task = new Task("Просто задача - 1", "Описание простой задачи - 1");
-        epic = new Epic(1,"Эпическая задача - 1","Описание эпической задачи - 1", Status.NEW);
+        epic = new Epic(1, "Эпическая задача - 1", "Описание эпической задачи - 1", Status.NEW);
     }
 
     @AfterEach

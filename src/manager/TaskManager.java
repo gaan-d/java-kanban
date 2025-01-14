@@ -56,5 +56,6 @@ public interface TaskManager {
     List<Task> getHistory();
 
     Subtask getSubtaskWithoutHistory(int subtaskId);
+
     Set<Task> getPrioritizedTasks();
 }

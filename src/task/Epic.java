@@ -20,8 +20,9 @@ public class Epic extends Task {
         super(id, name, description, status);
         Duration duration = Duration.ZERO;
     }
-    public Epic (int id, String name, String description, Status status, LocalDateTime startTime, Duration duration,
-                 LocalDateTime endTime){
+
+    public Epic(int id, String name, String description, Status status, LocalDateTime startTime, Duration duration,
+                LocalDateTime endTime) {
         super(id, name, description, status, startTime, duration);
         this.endTime = endTime;
     }
@@ -29,7 +30,10 @@ public class Epic extends Task {
     public LocalDateTime getEndTime() {
         return endTime;
     }
-    public void setEndTime(LocalDateTime endTime){this.endTime = endTime;}
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
 
     public List<Integer> getSubtaskIds() {
         return subtaskIds;
@@ -76,6 +80,7 @@ public class Epic extends Task {
     public void updateEpic(TaskManager manager) {
         updateStatus(manager);
     }
+
     public static String formatDuration(Duration duration) {
         long hours = duration.toHours();
         long minutes = duration.toMinutesPart(); // Часть минут без часов
