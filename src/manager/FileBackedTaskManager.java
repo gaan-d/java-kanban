@@ -67,12 +67,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         long duration = task.getDuration() != null ? task.getDuration().toMinutes() : 0;
         sb.append(task.getId()).append(',').append(task.getType()).append(',').append(task.getName());
         sb.append(',').append(task.getStatus()).append(',').append(task.getDescription()).append(',');
-        sb.append(task.getStartTime()).append(',').append(duration).append(',');
-        if (task instanceof Subtask subtask) {
+        sb.append(task.getStartTime()).append(',').append(duration).append(',').append(task.getEndTime()).append(',');
+        if (task.getType() == TaskType.SUBTASK) {
+            Subtask subtask = (Subtask) task;
             sb.append(subtask.getParentId());
-        }
-        if (task instanceof Epic epic) {
-            sb.append(epic.getEndTime());
         }
         return sb.toString();
     }
@@ -83,7 +81,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         try (Writer fileWriter = new FileWriter(saveFile, StandardCharsets.UTF_8)) {
-            fileWriter.write("id,type,name,status,description,epic, startTime, duration, endTime\n");
+            fileWriter.write("id,type,name,status,description,epic, startTime, duration, endTime, epicId\n");
             for (Task task : getTasks()) {
                 fileWriter.write(taskToString(task) + "\n");
             }
@@ -108,6 +106,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             default -> throw new IllegalStateException("Неожиданное значение статуса " + taskFields[3]);
         };
         LocalDateTime startTime = parseNullableDateTime(taskFields[5]);
+        LocalDateTime endTime = parseNullableDateTime(taskFields[7]);
         long duration = taskFields[6].equals("null") ? 0 : Long.parseLong(taskFields[6]);
 
         TaskType tasktype = TaskType.valueOf(taskFields[1]);
@@ -116,10 +115,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     Duration.ofMinutes(duration));
         } else if (tasktype == TaskType.SUBTASK) {
             task = new Subtask(Integer.parseInt(taskFields[0]), taskFields[4], taskFields[2], status,
-                    startTime, Duration.ofMinutes(duration), Integer.parseInt(taskFields[7]));
+                    startTime, Duration.ofMinutes(duration), Integer.parseInt(taskFields[8]));
         } else if (tasktype == TaskType.EPIC) {
             task = new Epic(Integer.parseInt(taskFields[0]), taskFields[2], taskFields[4], status,
-                    startTime, Duration.ofMinutes(duration), parseNullableDateTime(taskFields[7]));
+                    startTime, Duration.ofMinutes(duration), endTime);
         }
         return task;
     }

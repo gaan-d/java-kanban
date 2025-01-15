@@ -161,7 +161,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task deleteTask(int id) {
-        timeOrderedTasks.removeIf(task -> id == task.getId());
+        timeOrderedTasks.remove(getTask(id));
         return tasks.remove(id);
     }
 
@@ -192,18 +192,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTasks() {
-        tasks.keySet().forEach(taskId -> timeOrderedTasks.removeIf(task -> task.getId() == taskId));
+        timeOrderedTasks.removeAll(tasks.values());
         tasks.clear();
     }
 
     @Override
     public void deleteSubtasks() {
         epics.values().forEach(epic -> {
-            List<Integer> subtaskIds = new ArrayList<>(epic.getSubtaskIds());
-            timeOrderedTasks.removeIf(task -> subtaskIds.contains(task.getId()));
             epic.getSubtaskIds().clear();
             updateEpic(epic);
         });
+        timeOrderedTasks.removeAll(subtasks.values());
         subtasks.clear();
     }
 
@@ -256,8 +255,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Set<Task> getPrioritizedTasks() {
-        return timeOrderedTasks;
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(timeOrderedTasks);
     }
 
     protected void checkForTimeConflicts(Task task) {
