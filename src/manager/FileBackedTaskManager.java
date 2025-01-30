@@ -7,6 +7,9 @@ import task.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File saveFile;
@@ -61,15 +64,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private String taskToString(Task task) {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.join(",",
-                String.valueOf(task.getId()),
-                task.getType().name(),
-                task.getName(),
-                task.getStatus().toString(),
-                task.getDescription()
-        ));
+        long duration = task.getDuration() != null ? task.getDuration().toMinutes() : 0;
+        sb.append(task.getId()).append(',').append(task.getType()).append(',').append(task.getName());
+        sb.append(',').append(task.getStatus()).append(',').append(task.getDescription()).append(',');
+        sb.append(task.getStartTime()).append(',').append(duration).append(',').append(task.getEndTime()).append(',');
         if (task.getType() == TaskType.SUBTASK) {
-            sb.append(",").append(((Subtask) task).getParentId());
+            Subtask subtask = (Subtask) task;
+            sb.append(subtask.getParentId());
         }
         return sb.toString();
     }
@@ -80,7 +81,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         try (Writer fileWriter = new FileWriter(saveFile, StandardCharsets.UTF_8)) {
-            fileWriter.write("id,type,name,status,description,epic\n");
+            fileWriter.write("id,type,name,status,description,epic, startTime, duration, endTime, epicId\n");
             for (Task task : getTasks()) {
                 fileWriter.write(taskToString(task) + "\n");
             }
@@ -104,15 +105,29 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case "Выполнено" -> Status.DONE;
             default -> throw new IllegalStateException("Неожиданное значение статуса " + taskFields[3]);
         };
+        LocalDateTime startTime = parseNullableDateTime(taskFields[5]);
+        LocalDateTime endTime = parseNullableDateTime(taskFields[7]);
+        long duration = taskFields[6].equals("null") ? 0 : Long.parseLong(taskFields[6]);
+
         TaskType tasktype = TaskType.valueOf(taskFields[1]);
         if (tasktype == TaskType.TASK) {
-            task = new Task(Integer.parseInt(taskFields[0]), taskFields[2], taskFields[4], status);
+            task = new Task(Integer.parseInt(taskFields[0]), taskFields[2], taskFields[4], status, startTime,
+                    Duration.ofMinutes(duration));
         } else if (tasktype == TaskType.SUBTASK) {
-            task = new Subtask(Integer.parseInt(taskFields[0]), taskFields[2], taskFields[4], status, Integer.parseInt(taskFields[5]));
+            task = new Subtask(Integer.parseInt(taskFields[0]), taskFields[4], taskFields[2], status,
+                    startTime, Duration.ofMinutes(duration), Integer.parseInt(taskFields[8]));
         } else if (tasktype == TaskType.EPIC) {
-            task = new Epic(Integer.parseInt(taskFields[0]), taskFields[2], taskFields[4], status);
+            task = new Epic(Integer.parseInt(taskFields[0]), taskFields[2], taskFields[4], status,
+                    startTime, Duration.ofMinutes(duration), endTime);
         }
         return task;
+    }
+
+    public static LocalDateTime parseNullableDateTime(String dateTime) {
+        return Optional.ofNullable(dateTime)
+                .filter(s -> !"null".equals(s))
+                .map(LocalDateTime::parse)
+                .orElse(null);
     }
 
     @Override

@@ -2,12 +2,15 @@ package task;
 
 import manager.TaskManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
-    private List<Integer> subtaskIds = new ArrayList<>(); // Хранение только ID подзадач
+    private final List<Integer> subtaskIds = new ArrayList<>(); // Хранение только ID подзадач
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description, Status.NEW);
@@ -15,6 +18,21 @@ public class Epic extends Task {
 
     public Epic(int id, String name, String description, Status status) {
         super(id, name, description, status);
+        Duration duration = Duration.ZERO;
+    }
+
+    public Epic(int id, String name, String description, Status status, LocalDateTime startTime, Duration duration,
+                LocalDateTime endTime) {
+        super(id, name, description, status, startTime, duration);
+        this.endTime = endTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public List<Integer> getSubtaskIds() {
@@ -53,8 +71,6 @@ public class Epic extends Task {
                 setStatus(Status.DONE);
             } else if (hasInProgress) {
                 setStatus(Status.IN_PROGRESS);
-            } else if (!allDone && !hasInProgress) {
-                setStatus(Status.IN_PROGRESS);
             } else {
                 setStatus(Status.NEW);
             }
@@ -65,14 +81,25 @@ public class Epic extends Task {
         updateStatus(manager);
     }
 
+    public static String formatDuration(Duration duration) {
+        long hours = duration.toHours();
+        long minutes = duration.toMinutesPart(); // Часть минут без часов
+        long seconds = duration.toSecondsPart(); // Часть секунд без минут
+
+        return String.format("%d hours, %d minutes, %d seconds", hours, minutes, seconds);
+    }
+
     @Override
     public String toString() {
         return "Epic{" +
-                "title='" + getName() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", id=" + getId() +
-                ", status=" + getStatus() +
-                ", subtaskIds=" + getSubtaskIds() +
+                "name= '" + getName() + '\'' +
+                ", description= '" + getDescription() + '\'' +
+                ", id= " + getId() +
+                ", status= " + getStatus() +
+                ", subtaskIds= " + getSubtaskIds() +
+                ", startTime= " + getStartTime() +
+                ", duration= " + formatDuration(getDuration()) +
+                ", endTime= " + endTime +
                 '}';
     }
 

@@ -5,6 +5,8 @@ import task.Status;
 import task.Subtask;
 import task.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Main {
@@ -13,8 +15,10 @@ public class Main {
         TaskManager manager = Managers.getDefault();
 
         // Создание
-        Task task1 = new Task("Task #1", "Task1 description", Status.NEW);
-        Task task2 = new Task("Task #2", "Task2 description", Status.IN_PROGRESS);
+        Task task1 = new Task("Task #1", "Task1 description", Status.NEW,
+                LocalDateTime.of(2024, 10, 1, 6, 0), Duration.ofHours(2));
+        Task task2 = new Task("Task #2", "Task2 description", Status.IN_PROGRESS,
+                LocalDateTime.of(2024, 10, 1, 6, 0), Duration.ofHours(2));
         final int taskId1 = manager.addNewTask(task1);
         final int taskId2 = manager.addNewTask(task2);
 
@@ -23,9 +27,12 @@ public class Main {
         final int epicId1 = manager.addNewEpic(epic1);
         final int epicId2 = manager.addNewEpic(epic2);
 
-        Subtask subtask1 = new Subtask("Subtask #1-1", "Subtask1 description", Status.NEW, epicId1);
-        Subtask subtask2 = new Subtask("Subtask #2-1", "Subtask1 description", Status.NEW, epicId1);
-        Subtask subtask3 = new Subtask("Subtask #3-2", "Subtask1 description", Status.DONE, epicId2);
+        Subtask subtask1 = new Subtask("Subtask #1-1", "Subtask1 description", Status.NEW,
+                LocalDateTime.of(2024, 10, 1, 3, 30), Duration.ofHours(2), epicId1);
+        Subtask subtask2 = new Subtask("Subtask #2-1", "Subtask1 description", Status.NEW,
+                LocalDateTime.of(2024, 10, 1, 0, 0), Duration.ofHours(1), epicId1);
+        Subtask subtask3 = new Subtask("Subtask #3-2", "Subtask1 description", Status.DONE,
+                LocalDateTime.of(2024, 10, 1, 9, 0), Duration.ofHours(1), epicId2);
         final Integer subtaskId1 = manager.addNewSubtask(subtask1);
         final Integer subtaskId2 = manager.addNewSubtask(subtask2);
         final Integer subtaskId3 = manager.addNewSubtask(subtask3);
