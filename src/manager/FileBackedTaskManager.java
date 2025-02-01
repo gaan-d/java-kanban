@@ -53,6 +53,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             Epic epic = epics.get(epicId);
             if (epic != null) {
                 subtasks.put(subtask.getId(), subtask);
+                System.out.println(epic.getSubtaskIds());
                 epic.addSubtaskId(subtask.getId());
             } else {
                 throw new ManagerLoadException("Ошибка при восстановлении подзадачи");
@@ -82,13 +83,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         try (Writer fileWriter = new FileWriter(saveFile, StandardCharsets.UTF_8)) {
             fileWriter.write("id,type,name,status,description,epic, startTime, duration, endTime, epicId\n");
-            for (Task task : getTasks()) {
+            for (Task task : getAllTasks()) {
                 fileWriter.write(taskToString(task) + "\n");
             }
-            for (Epic epic : getEpics()) {
+            for (Epic epic : getAllEpics()) {
                 fileWriter.write(taskToString(epic) + "\n");
             }
-            for (Subtask subtask : getSubtasks()) {
+            for (Subtask subtask : getAllSubtasks()) {
                 fileWriter.write(taskToString(subtask) + "\n");
             }
         } catch (IOException e) {
