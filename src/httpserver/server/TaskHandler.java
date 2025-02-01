@@ -92,10 +92,10 @@ public class TaskHandler extends BaseHttpHandler {
         try {
             Task newTask = readTaskFromRequest(exchange);
             String response;
-            if (newTask.getId() == 0 || newTask.getId() <= 0){
+            if (newTask.getId() == 0 || newTask.getId() <= 0) {
                 int generatedId = taskManager.addNewTask(newTask);
                 response = "Задача успешно добавлена с ID: " + generatedId;
-            } else{
+            } else {
                 taskManager.updateTask(newTask);
                 response = "Задача с ID" + newTask.getId() + "обновлена.";
             }
