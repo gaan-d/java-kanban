@@ -14,11 +14,10 @@ import task.Task;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryHandler extends PrioritizedHandler {
-    private final Gson gson = new  GsonBuilder()
+    private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .create();

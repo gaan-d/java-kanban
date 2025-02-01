@@ -15,11 +15,10 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 public class PrioritizedHandler extends BaseHttpHandler {
     protected final TaskManager taskManager;
-    private final Gson gson = new  GsonBuilder()
+    private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .create();

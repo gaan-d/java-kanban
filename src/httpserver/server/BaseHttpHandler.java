@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public abstract class BaseHttpHandler implements HttpHandler {
-    protected void sendText(HttpExchange exchange, String text, int statusCode) throws IOException{
-        String responseText = switch (statusCode){
+    protected void sendText(HttpExchange exchange, String text, int statusCode) throws IOException {
+        String responseText = switch (statusCode) {
             case 404 -> "404 Not Found - " + text;
             case 406 -> "406 Not Acceptable - " + text;
             default -> text;

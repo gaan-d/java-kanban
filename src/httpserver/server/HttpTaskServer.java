@@ -17,7 +17,7 @@ public class HttpTaskServer {
     private static HttpServer server;
     private static final int PORT = 8080;
 
-    public HttpTaskServer(TaskManager manager) throws IOException{
+    public HttpTaskServer(TaskManager manager) throws IOException {
         server = HttpServer.create(new InetSocketAddress(PORT), 0);
         server.createContext("/tasks", new TaskHandler(manager));
         server.createContext("/subtasks", new SubtaskHandler(manager));
@@ -26,19 +26,19 @@ public class HttpTaskServer {
         server.createContext("/prioritized", new PrioritizedHandler(manager));
     }
 
-    public void start(){
+    public void start() {
         server.start();
         System.out.println("Сервер запущен на порте " + PORT);
     }
 
-    public void stop(){
+    public void stop() {
         server.stop(2);
     }
 
     public static Gson getGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .registerTypeAdapter(LocalDateTime.class, new  LocalDateTimeAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
     }
 
