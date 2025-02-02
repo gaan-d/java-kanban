@@ -53,7 +53,9 @@ public class SubtaskHandler extends TaskHandler {
             if (taskId == 0) {
                 taskId = taskManager.addNewSubtask(newTask);
                 if (taskId == -1) {
-                    throw new NotFoundException("Подзадача не может быть создана без эпика");
+                    //throw new NotFoundException("Подзадача не может быть создана без эпика");
+                    response = "Подзадача не может быть создана без эпика";
+                    sendText(exchange, response, 404);
                 }
                 response = "Задача успешно добавлена с ID: " + taskId;
             } else {
@@ -63,6 +65,8 @@ public class SubtaskHandler extends TaskHandler {
             sendText(exchange, response, 201);
         } catch (JsonParseException | BadRequestException e) {
             handleErrorResponse(e, 400, exchange);
+        } catch (NotFoundException e) {
+            handleErrorResponse(e, 404, exchange);
         } catch (ManagerValidatePriorityException e) {
             handleErrorResponse(e, 406, exchange);
         }
@@ -80,6 +84,8 @@ public class SubtaskHandler extends TaskHandler {
         } catch (JsonParseException | InvalidTaskIdException | IllegalArgumentException | URISyntaxException
                  | BadRequestException e) {
             handleErrorResponse(e, 400, exchange);
+        } catch (NotFoundException e) {
+            handleErrorResponse(e, 404, exchange);
         } catch (ManagerValidatePriorityException e) {
             handleErrorResponse(e, 406, exchange);
         }

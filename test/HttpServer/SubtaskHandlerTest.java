@@ -211,11 +211,10 @@ public class SubtaskHandlerTest {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(url).POST(HttpRequest.BodyPublishers.ofString(taskJson)).build();
         client.send(request, HttpResponse.BodyHandlers.ofString());
-
         subtaskId2.setStatus(Status.DONE);
 
         taskJson = gson.toJson(subtaskId2);
-        url = URI.create("http://localhost:8080/tasks?id=3");
+        url = URI.create("http://localhost:8080/subtasks?id=3");
         request = HttpRequest.newBuilder().uri(url).PUT(HttpRequest.BodyPublishers.ofString(taskJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 

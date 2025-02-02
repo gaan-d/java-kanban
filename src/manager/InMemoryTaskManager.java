@@ -25,8 +25,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public int generateUid(Task task) {
-        int id = taskIdCounter++;
-        return id;
+        return taskIdCounter++;
     }
 
     @Override

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class TaskHandler extends BaseHttpHandler {
     protected final TaskManager taskManager;
-    protected Gson gson;
+    protected final Gson gson;
 
     public TaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
@@ -60,8 +60,8 @@ public class TaskHandler extends BaseHttpHandler {
                     sendUnsupportedMethod(exchange);
                     break;
             }
-        } catch (NotFoundException e) {
-            sendText(exchange, e.getMessage(), 404);
+        } catch (Exception e) {
+            sendText(exchange, "Internal server error" + e.getMessage(), 500);
         } finally {
             exchange.close();
         }
@@ -104,6 +104,8 @@ public class TaskHandler extends BaseHttpHandler {
             handleErrorResponse(e, 400, exchange);
         } catch (ManagerValidatePriorityException e) {
             handleErrorResponse(e, 406, exchange);
+        } catch (NotFoundException e) {
+            handleErrorResponse(e, 404, exchange);
         }
     }
 
@@ -120,6 +122,8 @@ public class TaskHandler extends BaseHttpHandler {
             handleErrorResponse(e, 400, exchange);
         } catch (ManagerValidatePriorityException e) {
             handleErrorResponse(e, 406, exchange);
+        } catch (NotFoundException e) {
+            handleErrorResponse(e, 404, exchange);
         }
     }
 

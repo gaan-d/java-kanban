@@ -16,7 +16,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class HistoryHandler extends PrioritizedHandler {
+public class HistoryHandler extends TaskListHandler {
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(Duration.class, new DurationAdapter())
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
@@ -24,6 +24,11 @@ public class HistoryHandler extends PrioritizedHandler {
 
     public HistoryHandler(TaskManager taskManager) {
         super(taskManager);
+    }
+
+    @Override
+    protected List<Task> getTaskList() {
+        return taskManager.getHistory(); // возвращаем историю задач
     }
 
     @Override
