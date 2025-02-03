@@ -45,9 +45,9 @@ public class FileBackedTaskManagerTest extends AbstractTaskManagerTest<FileBacke
     void loadFromEmptyFileTest() {
         Path pathEmpty = Paths.get("file_empty.csv");
         FileBackedTaskManager backedTaskManager2 = loadFromFile(new File(String.valueOf(pathEmpty)));
-        final List<Task> tasks = backedTaskManager2.getTasks();
-        final List<Epic> epics = backedTaskManager2.getEpics();
-        final List<Subtask> subtasks = backedTaskManager2.getSubtasks();
+        final List<Task> tasks = backedTaskManager2.getAllTasks();
+        final List<Epic> epics = backedTaskManager2.getAllEpics();
+        final List<Subtask> subtasks = backedTaskManager2.getAllSubtasks();
         assertEquals(0, tasks.size(), "Количество задач не верное");
         assertEquals(0, epics.size(), "Количество эпиков не верное");
         assertEquals(0, subtasks.size(), "Количество подзадач не верное");

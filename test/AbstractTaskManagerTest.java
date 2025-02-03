@@ -1,4 +1,4 @@
-import exception.ManagerValidatePriority;
+import exception.ManagerValidatePriorityException;
 import manager.TaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
 
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(task, savedTask, "Задачи не совпадают.");
-        final List<Task> tasks = taskManager.getTasks();
+        final List<Task> tasks = taskManager.getAllTasks();
         assertNotNull(tasks, "Задачи не возвращаются.");
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.getFirst(), "Задачи не совпадают.");
@@ -50,7 +50,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
         assertEquals(subtask, savedSubtask, "Подзадачи не совпадают.");
         final int savedEpicId = savedSubtask.getParentId();
         assertEquals(subtask.getParentId(), savedEpicId, "Эпики у подзадач не совпадают.");
-        final List<Subtask> subtasks = taskManager.getSubtasks();
+        final List<Subtask> subtasks = taskManager.getAllSubtasks();
         assertNotNull(subtasks, "Подзадачи не возвращаются.");
         assertEquals(1, subtasks.size(), "Неверное количество подзадач.");
         assertEquals(subtask, subtasks.getFirst(), "Подзадачи не совпадают.");
@@ -62,7 +62,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
         final Epic savedEpic = taskManager.getEpic(epicId);
         assertNotNull(savedEpic, "Эпик не найдена.");
         assertEquals(epic, savedEpic, "Эпики не совпадают.");
-        final List<Epic> epics = taskManager.getEpics();
+        final List<Epic> epics = taskManager.getAllEpics();
         assertNotNull(epics, "Эпики не возвращаются.");
         assertEquals(1, epics.size(), "Неверное количество Эпиков.");
         assertEquals(epic, epics.getFirst(), "Эпики не совпадают.");
@@ -87,7 +87,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
         taskManager.updateEpic(epic2);
         assertNotNull(savedEpic, "Эпик не найден.");
         assertEquals(epic2, savedEpic, "Эпики не совпадают.");
-        final List<Epic> epics = taskManager.getEpics();
+        final List<Epic> epics = taskManager.getAllEpics();
         assertNotNull(epics, "Эпики на возвращаются.");
         assertEquals(1, epics.size(), "Неверное количество эпиков.");
         assertEquals(epic2, epics.getFirst(), "Эпики не совпадают.");
@@ -104,7 +104,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
         taskManager.updateSubtask(subtask);
         assertNotNull(savedSubtask, "Подзадачи не найдена.");
         assertEquals(subtask, savedSubtask, "Подзадачи не совпадают.");
-        final List<Subtask> subtasks = taskManager.getSubtasks();
+        final List<Subtask> subtasks = taskManager.getAllSubtasks();
         assertNotNull(subtasks, "Подзадачи на возвращаются.");
         assertEquals(1, subtasks.size(), "Неверное количество подзадач.");
         assertEquals(subtask, subtasks.getFirst(), "Подзадачи не совпадают.");
@@ -115,8 +115,8 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
     void deleteTaskTest() {
         taskManager.addNewTask(task);
         taskManager.deleteTask(task.getId());
-        assertTrue(taskManager.getTasks().isEmpty(), "Задача не удалилась");
-        assertEquals(0, taskManager.getTasks().size(), "Задача не удалилась");
+        assertTrue(taskManager.getAllTasks().isEmpty(), "Задача не удалилась");
+        assertEquals(0, taskManager.getAllTasks().size(), "Задача не удалилась");
     }
 
     @Test
@@ -124,16 +124,16 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
         taskManager.addNewTask(task);
         taskManager.addNewTask(task);
         taskManager.deleteTasks();
-        assertTrue(taskManager.getTasks().isEmpty(), "Задачи не удалились");
-        assertEquals(0, taskManager.getTasks().size(), "Задачи не удалились");
+        assertTrue(taskManager.getAllTasks().isEmpty(), "Задачи не удалились");
+        assertEquals(0, taskManager.getAllTasks().size(), "Задачи не удалились");
     }
 
     @Test
     void deleteEpicTest() {
         taskManager.addNewEpic(epic);
         taskManager.deleteEpic(epic.getId());
-        assertTrue(taskManager.getEpics().isEmpty(), "Эпик не удалился");
-        assertEquals(0, taskManager.getEpics().size(), "Эпик не удалился");
+        assertTrue(taskManager.getAllEpics().isEmpty(), "Эпик не удалился");
+        assertEquals(0, taskManager.getAllEpics().size(), "Эпик не удалился");
     }
 
     @Test
@@ -141,8 +141,8 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
         taskManager.addNewEpic(epic);
         taskManager.addNewEpic(epic);
         taskManager.deleteEpics();
-        assertTrue(taskManager.getEpics().isEmpty(), "Эпики не удалились");
-        assertEquals(0, taskManager.getEpics().size(), "Эпики не удалились");
+        assertTrue(taskManager.getAllEpics().isEmpty(), "Эпики не удалились");
+        assertEquals(0, taskManager.getAllEpics().size(), "Эпики не удалились");
     }
 
     @Test
@@ -151,10 +151,11 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
         Subtask subtask = new Subtask("Подзадача - 1",
                 "Описание подзадачи - 1, эпической задачи - 1", epic.getId());
         int subtaskId = taskManager.addNewSubtask(subtask);
+        System.out.println(epic.getSubtaskIds().toString());
         assertEquals(1, epic.getSubtaskIds().size(), "ID подзадачи не зарегистрировался у эпика");
         taskManager.deleteSubtask(subtaskId);
-        assertTrue(taskManager.getSubtasks().isEmpty(), "Подзадача не удалилась");
-        assertEquals(0, taskManager.getSubtasks().size(), "Подзадача не удалилась");
+        assertTrue(taskManager.getAllSubtasks().isEmpty(), "Подзадача не удалилась");
+        assertEquals(0, taskManager.getAllSubtasks().size(), "Подзадача не удалилась");
         assertTrue(epic.getSubtaskIds().isEmpty(), "ID подзадачи не удалился из списка у эпика");
     }
 
@@ -166,8 +167,8 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
         taskManager.addNewSubtask(subtask);
         taskManager.addNewSubtask(subtask);
         taskManager.deleteSubtasks();
-        assertTrue(taskManager.getSubtasks().isEmpty(), "Подзадачи не удалились");
-        assertEquals(0, taskManager.getSubtasks().size(), "Подзадачи не удалились");
+        assertTrue(taskManager.getAllSubtasks().isEmpty(), "Подзадачи не удалились");
+        assertEquals(0, taskManager.getAllSubtasks().size(), "Подзадачи не удалились");
     }
 
     @Test
@@ -195,7 +196,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
         Task task2 = new Task("Задача- 2", "Описание 2", LocalDateTime.of(2023, 10,
                 1, 11, 0), Duration.ofHours(1));
         taskManager.addNewTask(task1);
-        Exception exception = assertThrows(ManagerValidatePriority.class, () -> {
+        Exception exception = assertThrows(ManagerValidatePriorityException.class, () -> {
             taskManager.addNewTask(task2);
         });
         assertEquals("Невозможно добавить задачу из-за пересечений с уже имеющимися задачами",
@@ -212,7 +213,7 @@ public abstract class AbstractTaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Подзадача - 1",
                 "Описание подзадачи - 1, эпической задачи - 1", LocalDateTime.of(2024, 10,
                 1, 11, 0), Duration.ofHours(1), epic.getId());
-        Exception exception = assertThrows(ManagerValidatePriority.class, () -> {
+        Exception exception = assertThrows(ManagerValidatePriorityException.class, () -> {
             taskManager.addNewSubtask(subtask2);
         });
         assertEquals("Невозможно добавить задачу из-за пересечений с уже имеющимися задачами",

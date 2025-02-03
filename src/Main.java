@@ -45,7 +45,7 @@ public class Main {
         manager.updateTask(task);
         System.out.println("CHANGE STATUS: Task2 IN_PROGRESS->DONE");
         System.out.println("Задачи:");
-        for (Task t : manager.getTasks()) {
+        for (Task t : manager.getAllTasks()) {
             System.out.println(t);
         }
 
@@ -58,12 +58,12 @@ public class Main {
         manager.updateSubtask(subtask);
         System.out.println("CHANGE STATUS: Subtask3 DONE->NEW");
         System.out.println("Подзадачи:");
-        for (Task t : manager.getSubtasks()) {
+        for (Task t : manager.getAllSubtasks()) {
             System.out.println(t);
         }
 
         System.out.println("Эпики:");
-        for (Task e : manager.getEpics()) {
+        for (Task e : manager.getAllEpics()) {
             System.out.println(e);
             for (Subtask t : manager.getEpicSubtasks(e.getId())) {
                 System.out.println("--> " + t);
@@ -76,7 +76,7 @@ public class Main {
         //printAllTasks(manager);
 
         System.out.println("Эпики:");
-        for (Task e : manager.getEpics()) {
+        for (Task e : manager.getAllEpics()) {
             System.out.println(e);
             for (Task t : manager.getEpicSubtasks(e.getId())) {
                 System.out.println("--> " + t);
@@ -106,7 +106,7 @@ public class Main {
         manager.getTasksMap().values().forEach(System.out::println);
 
         System.out.println("\nЭпики:");
-        for (Task epic : manager.getEpics()) {  // Здесь предполагается, что метод getEpics() возвращает список эпиков
+        for (Task epic : manager.getAllEpics()) {  // Здесь предполагается, что метод getEpics() возвращает список эпиков
             System.out.println(epic);  // Вывод информации об эпике
 
             List<Subtask> subtasks = manager.getEpicSubtasks(epic.getId());  // Получаем сабтаски для эпика
